@@ -10,7 +10,7 @@ imageApi.get('/', async (req: Request, res: Response) => {
     const width = parseInt(req.query.width as string);
     const height = parseInt(req.query.height as string);
     const filename = req.query.filename as string;
-    let thumbnailFile = path.resolve(
+    const thumbnailFile = path.resolve(
         'assets/thumbnails',
         `${filename}_${width}_${height}.jpeg`
     );
