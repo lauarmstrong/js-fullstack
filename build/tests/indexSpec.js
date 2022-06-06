@@ -40,7 +40,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var supertest_1 = __importDefault(require("supertest"));
+var path_1 = __importDefault(require("path"));
+var fs_1 = __importDefault(require("fs"));
 var index_1 = __importDefault(require("../index"));
+var resizeImage_1 = __importDefault(require("../utilities/resizeImage"));
 var request = (0, supertest_1.default)(index_1.default);
 describe('Endpoint GET request', function () {
     it('successfully gets the image endpoint', function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -55,10 +58,53 @@ describe('Endpoint GET request', function () {
             }
         });
     }); });
+    it('successfully gets the image endpoint when all query strings are provided', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/imageApi?filename=fox&height=100&width=100')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toBe(200);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    it('responds with error code 404 if all query string are not provided', function () { return __awaiter(void 0, void 0, void 0, function () {
+        var response;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, request.get('/api/imageApi?filename=fox&height=100')];
+                case 1:
+                    response = _a.sent();
+                    expect(response.status).toBe(404);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
-// describe('ResizeImage function', async() => {
-//     it('resizes the image when provided a width, height and file', () => {
-//         const response = await resizeImage(200, 200, imageFile);
-//         expect
-//     })
-// })
+describe('ResizeImage function', function () { return __awaiter(void 0, void 0, void 0, function () {
+    return __generator(this, function (_a) {
+        it('creates a file with resized image', function () { return __awaiter(void 0, void 0, void 0, function () {
+            var fileName, width, height, newThumbnailPath;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        fileName = 'dog';
+                        width = 200;
+                        height = 200;
+                        newThumbnailPath = path_1.default.resolve('assets/thumbnails', "".concat(fileName, "_").concat(width, "_").concat(height, ".jpeg"));
+                        if (fs_1.default.existsSync(newThumbnailPath)) {
+                            fs_1.default.unlinkSync(newThumbnailPath);
+                        }
+                        return [4 /*yield*/, (0, resizeImage_1.default)(200, 200, fileName)];
+                    case 1:
+                        _a.sent();
+                        expect(fs_1.default.existsSync(newThumbnailPath)).toBeTruthy();
+                        return [2 /*return*/];
+                }
+            });
+        }); });
+        return [2 /*return*/];
+    });
+}); });

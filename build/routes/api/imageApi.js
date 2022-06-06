@@ -55,9 +55,8 @@ imageApi.get('/', function (req, res) { return __awaiter(void 0, void 0, void 0,
                 thumbnailFile = path_1.default.resolve('assets/thumbnails', "".concat(filename, "_").concat(width, "_").concat(height, ".jpeg"));
                 // Handle missing data
                 if (!width || !height || !filename) {
-                    return [2 /*return*/, res
-                            .status(404)
-                            .send('Ensure you have provided a width, height and name in the URL')];
+                    res.status(404).send('Ensure you have provided a width, height and name in the URL');
+                    return [2 /*return*/];
                 }
                 if (!fs_1.default.existsSync(thumbnailFile)) return [3 /*break*/, 1];
                 res.sendFile(thumbnailFile);

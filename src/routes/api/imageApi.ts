@@ -5,7 +5,7 @@ import resizeImage from '../../utilities/resizeImage';
 
 const imageApi: Router = Router();
 
-imageApi.get('/', async (req: Request, res: Response) => {
+imageApi.get('/', async (req: Request, res: Response): Promise<void> => {
     // Obtain data from API query parameters
     const width = parseInt(req.query.width as string);
     const height = parseInt(req.query.height as string);
@@ -17,13 +17,12 @@ imageApi.get('/', async (req: Request, res: Response) => {
 
     // Handle missing data
     if (!width || !height || !filename) {
-        return res
-            .status(404)
-            .send(
-                'Ensure you have provided a width, height and name in the URL'
-            );
+        res.status(404).send(
+            'Ensure you have provided a width, height and name in the URL'
+        );
+        return;
     }
-    // Check if path exists the transform image and send as a response
+    // Check if path exists then transform image and send as a response
     if (fs.existsSync(thumbnailFile)) {
         res.sendFile(thumbnailFile);
     } else {
